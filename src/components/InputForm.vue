@@ -4,16 +4,16 @@
     <h1 class="text-center pb-2">{{ ttl }}</h1>
     <!-- submitイベントを無効に -->
     <form @submit.prevent="">
-      <div class="form-group">
-        <label for="name">名前</label>
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          v-model="data.name"
-          @change="createMessage()"
-        />
-      </div>
+      <input-component
+        labelName="名前"
+        labelFor="name"
+        :value="data.name"
+        type="text"
+        className="form-control"
+        id="name"
+        @input="data.name = $event"
+        @chnageValue="createMessage()"
+      />
       <div class="form-group">
         <label for="reason">遅刻理由</label>
         <select
@@ -28,16 +28,17 @@
         </select>
       </div>
       <!-- 理由がその他の時のみ表示 -->
-      <div class="form-group" v-show="data.reason == 'その他'">
-        <input
-          type="text"
-          class="form-control"
-          id="reson_other"
-          @change="createMessage()"
-          placeholder="その他の場合は理由を書いてください。"
-          v-model="data.reason_other"
-        />
-      </div>
+      <input-component
+        v-show="data.reason == 'その他'"
+        :showLabel="false"
+        :value="data.reason_other"
+        type="text"
+        className="form-control"
+        id="reson_other"
+        placeholder="その他の場合は理由を書いてください。"
+        @input="data.reason_other = $event"
+        @chnageValue="createMessage()"
+      />
       <div class="form-group">
         <label>種別</label>
         <div class="form-check" v-for="(type, index) in types" :key="index">
@@ -110,8 +111,12 @@
 </template>
 
 <script>
+import InputComponent from "./atoms/input";
 export default {
   name: "InputForm",
+  components: {
+    InputComponent,
+  },
   props: {
     ttl: String,
   },
